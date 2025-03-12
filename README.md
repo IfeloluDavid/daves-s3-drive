@@ -2,6 +2,9 @@
 
 Walkthrough: https://youtu.be/Lbr8xFj-PNU
 
+![diagram-export-2-19-2025-3_07_35-PM](https://github.com/user-attachments/assets/b1e326c0-d267-42da-b42e-41bdc16384d2)
+
+
 Instead of uploading files directly to the backend, Dave’s Drive generates a pre-signed S3 URL that enables users to upload files directly to Amazon S3. This ensures scalability, security, and efficiency while offloading storage concerns from the backend.
 
 ⚡ Why This Approach?
