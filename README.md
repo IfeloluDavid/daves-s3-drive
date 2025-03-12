@@ -1,12 +1,6 @@
-Dave’s Drive is a scalable, AWS-powered cloud storage system that allows users to securely upload, store, and retrieve files of any size. This project explores various AWS services to implement a serverless, containerized file storage solution.
+## Dave’s Drive is a scalable, AWS-powered cloud storage system that allows users to securely upload, store, and retrieve files of any size. This project explores various AWS services to implement a serverless, containerized file storage solution.
 
-🛑 Problem & Solution
-
-The Problem:
-
-Modern applications require secure, scalable, and cost-effective cloud storage solutions. Uploading large files directly to a backend can create performance bottlenecks and security risks.
-
-The Solution:
+Walkthrough: https://youtu.be/Lbr8xFj-PNU
 
 Instead of uploading files directly to the backend, Dave’s Drive generates a pre-signed S3 URL that enables users to upload files directly to Amazon S3. This ensures scalability, security, and efficiency while offloading storage concerns from the backend.
 
@@ -70,5 +64,3 @@ Runs the application as a containerized service.
 Elastic Container Registry (ECR)
 
 Stores container images for ECS deployment.
-
-Walkthrough: https://youtu.be/Lbr8xFj-PNU
