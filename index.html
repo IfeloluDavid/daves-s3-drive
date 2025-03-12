@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload File to S3</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="uploadstyle.css">
+</head>
+<body>
+    <div class="container">
+        <i class="fas fa-cloud-upload-alt icon"></i>
+        <h1>Upload Files to S3</h1>
+        <a href="getbucketContents.html"><h3>View all Files</h3></a>
+        
+        <form id="uploadForm">
+            <input type="file" id="fileInput" accept=".pdf, .docx, .xlsx, .txt, .jpg, .png" required>
+            <button type="submit"><i class="fas fa-upload"></i> Upload</button>
+        </form>
+        
+        <progress id="progressBar" value="0" max="100" style="width: 100%; display: none;"></progress>
+        
+        <p id="status" class="message"></p>
+        <p class="message">Supported file types: PDF, DOCX, XLSX, TXT, JPG, PNG</p>
+    </div>
+
+    <script>
+        const apiUrl = "https://hnh7l2wf0h.execute-api.us-east-1.amazonaws.com/dev/upload"; // Update with your API Gateway URL
+        document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const fileInput = document.getElementById('fileInput');
+            const statusText = document.getElementById('status');
+            const progressBar = document.getElementById('progressBar');
+
+            if (fileInput.files.length === 0) {
+                statusText.textContent = "Please select a file.";
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const requestUrl = `${apiUrl}?file=${encodeURIComponent(file.name)}`;
+            statusText.textContent = "Requesting upload URL...";
+
+            try {
+                const response = await fetch(requestUrl);
+                const data = await response.json();
+                const { url, fields } = data.URL;
+
+                const formData = new FormData();
+                Object.keys(fields).forEach(key => formData.append(key, fields[key]));
+                formData.append("file", file);
+
+                progressBar.style.display = "block";
+                progressBar.value = 0;
+                
+                const uploadResponse = await fetch(url, {
+                    method: "POST",
+                    body: formData,
+                    onUploadProgress: (event) => {
+                        if (event.lengthComputable) {
+                            let percentComplete = (event.loaded / event.total) * 100;
+                            progressBar.value = percentComplete;
+                        }
+                    }
+                });
+
+                if (uploadResponse.ok) {
+                    statusText.textContent = "Upload successful!";
+                    progressBar.value = 100;
+                } else {
+                    statusText.textContent = "Upload failed.";
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                statusText.textContent = "Error uploading file.";
+            }
+        });
+    </script>
+</body>
+</html>
